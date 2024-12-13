@@ -3,6 +3,17 @@
 `.cn`, `.top` 预删除的域名获取。
 
 
+<a href="https://pypi.org/project/predeldomain" target="_blank">
+    <img src="https://img.shields.io/pypi/v/predeldomain.svg" alt="Package version">
+</a>
+
+<a href="https://pypi.org/project/predeldomain" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/predeldomain.svg" alt="Supported Python versions">
+</a>
+
+---
+
+
 ## 使用方法
 ### 1. 安装依赖包：
 - 方式一：通过 pypi
@@ -11,7 +22,7 @@ pip install predeldomain
 ```
 - 方式二：通过代码仓库
 ```bash
-pip install git+git@github.com:jetsung/predeldomain.git
+pip install git+https://github.com/idevsig/predeldomain.git
 ```
 - 方式三：通过本地仓库
 ```bash
@@ -52,6 +63,7 @@ options:
 
 ### 3. PUSH 通知
 当前仅支持 [**Lark**](https://www.larksuite.com/) 以及 [**PushDeer**](http://www.pushdeer.com/)。依赖 [**ipush 库**](https://github.com/idevsig/pypush)，可自行添加其它渠道。
+
 需要设置环境变量
 ```bash
 # Lark
