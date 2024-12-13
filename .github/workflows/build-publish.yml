@@ -20,7 +20,7 @@ jobs:
           RYE_VERSION: 0.43.0
         run: |
           curl -sSf https://rye.astral.sh/get | bash
-          echo 'source "$HOME/.rye/env"' >> $GITHUB_PATH
+          echo "$HOME/.rye/shims" >> $GITHUB_PATH
 
 
       - name: Install dependencies
