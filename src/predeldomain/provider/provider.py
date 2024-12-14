@@ -6,7 +6,7 @@ from datetime import datetime
 import requests
 import whois
 
-from predeldomain.provider.service import Mode
+from predeldomain.utils.enum import Mode
 
 """
 Provider 提供者
@@ -21,7 +21,7 @@ class Provider:
     def __init__(
         self,
         length=3,
-        mode=Mode.ALPHABETIC.value,
+        mode=Mode.ALPHABETIC.value,  # noqa: F821
         whois='',
     ):
         self.length = length

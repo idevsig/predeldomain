@@ -39,7 +39,7 @@ Documentation = "https://framagit.org/idev/predeldomain"
 Repository = "https://framagit.org/idev/predeldomain.git"
 
 [project.scripts]
-predeldomain = "predeldomain:predeldomain.main"
+predeldomain = "predeldomain:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -10,25 +10,6 @@ from predeldomain.provider.provider_cn import CN
 from predeldomain.provider.provider_top import TOP
 
 
-def run(args):
-    """
-    主函数
-    """
-
-    functions = {'top': TOP, 'cn': CN}
-
-    # print(
-    #     f'Domain Suffix: {args.suffix}, Length: {args.length}, Mode: {args.mode}, Whois: {args.whois}'
-    # )
-    provider = functions.get(args.suffix, Provider)(args.length, args.mode, args.whois)
-    provider.entry()
-
-    data_list = provider.data_all()
-    write_log(data_list, args.suffix, args.type)
-
-    notify(data_list, args.suffix)
-
-
 def write_log(data_list, suffix, type='text'):
     """
     处理数据
@@ -116,3 +97,22 @@ def notify(data_list, suffix):
 
         if content_next:
             notify.send(content_next_text)
+
+
+def entry(args):
+    """
+    主函数
+    """
+
+    functions = {'top': TOP, 'cn': CN}
+
+    # print(
+    #     f'Domain Suffix: {args.suffix}, Length: {args.length}, Mode: {args.mode}, Whois: {args.whois}'
+    # )
+    provider = functions.get(args.suffix, Provider)(args.length, args.mode, args.whois)
+    provider.entry()
+
+    data_list = provider.data_all()
+    write_log(data_list, args.suffix, args.type)
+
+    notify(data_list, args.suffix)

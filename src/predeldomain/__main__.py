@@ -1,4 +1,5 @@
-from .predeldomain import main
+import sys
 
-if __name__ == '__main__':
-    main()
+import predeldomain
+
+sys.exit(predeldomain.main())

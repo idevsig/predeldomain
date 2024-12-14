@@ -22,7 +22,7 @@ pip install predeldomain
 ```
 - 方式二：通过代码仓库
 ```bash
-pip install git+https://github.com/idevsig/predeldomain.git
+pip install git+https://framagit.org/idev/predeldomain.git
 ```
 - 方式三：通过本地仓库
 ```bash
@@ -39,7 +39,7 @@ pip install predeldomain-X.X.X-py3-none-any.whl
 » predeldomain --help
 usage: predeldomain [-h] [-l [1-10]] [-m {1,2,3}] [-s {cn,top}] [-t {text,json}] [-w WHOIS]
 
-The domain name to be pre-deleted.
+The domain to be pre-deleted.
 
 options:
   -h, --help            show this help message and exit
@@ -58,7 +58,7 @@ options:
 2. mode: 模式， 1. 数字 + 字母, 2. 数字, 3. 字母
 3. suffix: 域名后缀， 'cn' 或者 'top'
 4. type: 保存类型， 'text' 或者 'json' （数据保存和发送通知的格式）
-5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用腾讯云的 API 查询。
+5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用官方接口(`.top`)、腾讯云(`.cn`)的 API 查询。
 
 结果将会通过 PUSH 通知，和保存到本地文件。本地文件将会以 `后缀_日期.log` 的格式保存（`_next`则是明天及以后预删除的域名）。
 
@@ -117,5 +117,5 @@ python -m pytest -s
 
 - https://git.jetsung.com/idev/predeldomain
 - https://framagit.org/idev/predeldomain
-- https://github.com/idevsig/predeldomain
 - https://gitcode.com/idev/predeldomain
+- https://github.com/idevsig/predeldomain
