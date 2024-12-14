@@ -22,7 +22,6 @@ jobs:
           curl -sSf https://rye.astral.sh/get | bash
           echo "$HOME/.rye/shims" >> $GITHUB_PATH
 
-
       - name: Install dependencies
         run: |
           rye sync

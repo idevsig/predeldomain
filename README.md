@@ -59,6 +59,7 @@ options:
 3. suffix: 域名后缀， 'cn' 或者 'top'
 4. type: 保存类型， 'text' 或者 'json' （数据保存和发送通知的格式）
 5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用腾讯云的 API 查询。
+
 结果将会通过 PUSH 通知，和保存到本地文件。本地文件将会以 `后缀_日期.log` 的格式保存（`_next`则是明天及以后预删除的域名）。
 
 ### 3. PUSH 通知
@@ -78,7 +79,7 @@ export PUSHDEER_TOKEN=""
 
 ### 1. 前置开发环境
 
-1. 使用 [**Rye**](https://rye-up.com/) 作为包管理工具
+1. 使用 [**Rye**](https://rye.astral.sh/) 作为包管理工具
 
 ### 2. 开发流程
 
