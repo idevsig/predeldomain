@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import time
 from datetime import datetime
 
 import requests
@@ -23,16 +24,14 @@ class Provider:
         length=3,
         mode=Mode.ALPHABETIC.value,  # noqa: F821
         whois='',
+        delay=3,
+        ouput=False,
     ):
         self.length = length
         self.mode = mode
         self.whois = whois
-
-    def is_domain_available(self, domain: str) -> bool:
-        """
-        判断是否可注册
-        """
-        return False
+        self.delay = delay
+        self.ouput = ouput
 
     def entry(self):  # noqa: B027
         """
@@ -46,17 +45,29 @@ class Provider:
         """
         return self.data
 
+    def data_early(self):
+        """
+        获取昨日数据
+        """
+        return self.data[0] if len(self.data) > 0 else []
+
     def data_today(self):
         """
         获取今日数据
         """
-        return self.data[0] if len(self.data) > 0 else []
+        return self.data[1] if len(self.data) > 1 else []
+
+    def data_tomorrow(self):
+        """
+        获取明日数据
+        """
+        return self.data[2] if len(self.data) > 2 else []
 
     def data_future(self):
         """
         获取未来数据
         """
-        return self.data[1:] if len(self.data) > 1 else []
+        return self.data[3:] if len(self.data) > 3 else []
 
     def match_mode(self, data):
         """
@@ -87,6 +98,47 @@ class Provider:
             return True
         file_time = datetime.fromtimestamp(os.path.getmtime(file_name))
         return file_time.date() != datetime.now().date()
+
+    def print_data(self, domain, is_available=False):
+        """
+        打印数据
+        """
+        if self.ouput:
+            print(f'{domain} is available: {is_available}')
+
+    def is_domain_available(self, domain):
+        """
+        判断是否可注册
+        """
+
+        if self.whois == 'nic':  # nic.top
+            if '.top' in domain:
+                is_available = self.nic_top_available(domain)
+                self.print_data(domain, is_available)
+                return is_available
+            else:
+                return False
+
+        time.sleep(self.delay)
+
+        is_available = False
+        if self.whois == 'isp':
+            is_available = self.isp_available(domain)
+        elif self.whois == 'whois':
+            is_available = self.whois_available(domain)
+        else:
+            return True
+
+        self.print_data(domain, is_available)
+        return is_available
+
+    def nic_top_available(self, domain):
+        """
+        通过 nic.top 判断是否可注册
+        """
+        params = {'domainName': domain}
+        response = requests.post('https://www.nic.top/cn/whoischeck.asp', data=params)
+        return 'is available' in response.text
 
     def whois_available(self, domain):
         """
@@ -142,10 +194,6 @@ class Provider:
                 raise ValueError(f'status code {response.status_code}')
 
             resp = response.json()
-            if response.status_code != 200:
-                raise ValueError(f'status code is: {response.status_code}')
-            if 'code' not in resp or resp['code'] != 0:
-                raise ValueError(f'code not in resp: {resp}')
             if 'message' in resp and '未注册' in resp['message']:
                 return True
             else:

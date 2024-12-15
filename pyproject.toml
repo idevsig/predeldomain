@@ -1,6 +1,6 @@
 [project]
 name = "predeldomain"
-version = "0.1.0"
+version = "0.2.0"
 description = "预删除域名查询"
 authors = [
     { name = "Jetsung Chan", email = "jetsungchan@gmail.com" }
@@ -14,6 +14,7 @@ dependencies = [
 readme = "README.md"
 keywords = ["domain"]
 requires-python = ">= 3.10"
+license = { text = "Apache-2.0" }
 classifiers = [
     'Development Status :: 4 - Beta',
     'Environment :: Console',

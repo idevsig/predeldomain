@@ -37,28 +37,36 @@ pip install predeldomain-X.X.X-py3-none-any.whl
 
 ```bash
 » predeldomain --help
-usage: predeldomain [-h] [-l [1-10]] [-m {1,2,3}] [-s {cn,top}] [-t {text,json}] [-w WHOIS]
+usage: predeldomain [-h] [-d [1-30]] [-l [1-10]] [-m {1,2,3}] [-o OUPUT] [-s {cn,top}] [-t {text,json}] [-w WHOIS] [-v]
 
 The domain to be pre-deleted.
 
 options:
   -h, --help            show this help message and exit
+  -d [1-30], --delay [1-30]
+                        Delay: 1s to 30s
   -l [1-10], --length [1-10]
                         Length: 1 to 10
   -m {1,2,3}, --mode {1,2,3}
                         Mode: 1. Alphanumeric, 2. Numeric, 3. Alphabetic
+  -o OUPUT, --ouput OUPUT
+                        Output: print data to stdout
   -s {cn,top}, --suffix {cn,top}
                         Suffix: 'cn' or 'top'
   -t {text,json}, --type {text,json}
                         Save type: 'text' or 'json'
   -w WHOIS, --whois WHOIS
-                        Whois: whois, isp, none
+                        Whois: whois, isp, nic, none
+  -v, --version         Print version
 ```
 1. length: 长度，不含后缀
 2. mode: 模式， 1. 数字 + 字母, 2. 数字, 3. 字母
 3. suffix: 域名后缀， 'cn' 或者 'top'
 4. type: 保存类型， 'text' 或者 'json' （数据保存和发送通知的格式）
 5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用官方接口(`.top`)、腾讯云(`.cn`)的 API 查询。
+6. version: 版本信息
+7. delay: 接口查询延时，单位秒，默认为 3
+8. ouput: 是否输出到控制台，默认为 False
 
 结果将会通过 PUSH 通知，和保存到本地文件。本地文件将会以 `后缀_日期.log` 的格式保存（`_next`则是明天及以后预删除的域名）。
 

@@ -24,22 +24,6 @@ class TOP(Provider):
                 f'Failed to download CSV file, status code: {response.status_code}'
             )
 
-    def is_domain_available(self, domain):
-        """
-        判断是否可注册
-        """
-
-        if self.whois == 'isp':
-            params = {'domainName': domain}
-            response = requests.post(
-                'https://www.nic.top/cn/whoischeck.asp', data=params
-            )
-            return 'is available' in response.text
-        elif self.whois == 'whois':
-            return self.whois_available(f'{domain}.top')
-        else:
-            return True
-
     def entry(self):
         """
         主函数
@@ -57,23 +41,44 @@ class TOP(Provider):
 
         next(reader)  # 跳过 CSV 文件的头部
 
-        data_list = []
-        data_next = []
+        # 早期
+        data_early = []
+        data_today = []
+        data_tomorrow = []
+        data_future = []
 
         for row in reader:
-            data = row[0].replace('.top', '')
-            if not self.match_mode(data):
+            domain = row[0].replace('.top', '')
+            if not self.match_mode(domain):
                 continue
-            if len(data) <= self.length:
-                given_time = datetime.strptime(row[1], '%Y/%m/%d %H:%M')
-                if given_time < datetime.now():
-                    if self.is_domain_available(data):
-                        data_list.append(data)
-                    else:
-                        data_list.append(data)
-                elif given_time < datetime.now() + timedelta(days=1):
-                    data_next.append(data)
+            if len(domain) <= self.length:
+                given_time = datetime.strptime(
+                    row[1], '%Y/%m/%d %H:%M'
+                )  # 解析时间字符串
+                current_date = datetime.now().date()  # 获取当前日期
+                tomorrow_date = current_date + timedelta(days=1)  # 计算明天的日期
 
-        data_list.sort()
-        data_next.sort()
-        self.data = [data_list, data_next]
+                # 检查日期
+                if given_time.date() < current_date:  # 如果日期是过去
+                    data_early.append(domain)  # 过去的数据
+                if given_time.date() == current_date:  # 如果日期是今天
+                    if (
+                        given_time.time() > datetime.now().time()
+                    ):  # 如果时间大于当前时间
+                        continue
+                    if not self.is_domain_available(
+                        f'{domain}.top'
+                    ):  # 判断域名是否可用
+                        continue
+
+                    data_today.append(domain)  # 今天过期且可用
+                elif given_time.date() == tomorrow_date:  # 如果日期是明天
+                    data_tomorrow.append(domain)  # 明天过期的数据
+                elif given_time.date() > tomorrow_date:  # 如果日期是未来
+                    data_future.append(domain)  # 添加到未来过期的数据列表
+
+        data_early.sort()
+        data_today.sort()
+        data_tomorrow.sort()
+        data_future.sort()
+        self.data = [data_early, data_today, data_tomorrow, data_future]

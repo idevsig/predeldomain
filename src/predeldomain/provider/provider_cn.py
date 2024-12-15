@@ -22,18 +22,6 @@ class CN(Provider):
                 f'Failed to download TXT file from {url}, status code: {response.status_code}'
             )
 
-    def is_domain_available(self, domain):
-        """
-        判断是否可注册
-        """
-        full_domain = f'{domain}.cn'
-        if self.whois == 'isp':
-            return self.isp_available(full_domain)
-        elif self.whois == 'whois':
-            return self.whois_available(full_domain)
-        else:
-            return True
-
     def _process_response(self, response, is_today=False):
         """
         处理响应数据并返回符合条件的域名列表
@@ -47,7 +35,7 @@ class CN(Provider):
                 continue
             if len(domain) <= self.length:
                 if is_today:
-                    if self.is_domain_available(domain):
+                    if self.is_domain_available(f'{domain}.cn'):
                         domain_list.append(domain)
                 else:
                     domain_list.append(domain)
@@ -59,11 +47,7 @@ class CN(Provider):
         """
         # 下载并处理今天的数据
         today_resp = self.download_txt(self.file_urls['today'])
-        data_list = self._process_response(today_resp, True)
-
-        # 下载并处理明天和后天的数据
-        data_tomorrow = []
-        data_after_tomorrow = []
+        data_today = self._process_response(today_resp, True)
 
         tomorrow_resp = self.download_txt(self.file_urls['tomorrow'])
         data_tomorrow = self._process_response(tomorrow_resp)
@@ -71,8 +55,10 @@ class CN(Provider):
         after_tomorrow_resp = self.download_txt(self.file_urls['after_tomorrow'])
         data_after_tomorrow = self._process_response(after_tomorrow_resp)
 
+        data_early = []
+
         # 排序结果
-        data_list.sort()
+        data_today.sort()
         data_tomorrow.sort()
         data_after_tomorrow.sort()
-        self.data = [data_list, data_tomorrow, data_after_tomorrow]
+        self.data = [data_early, data_today, data_tomorrow, data_after_tomorrow]

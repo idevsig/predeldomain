@@ -1,4 +1,5 @@
 import json
+import sys
 from datetime import datetime
 from os import environ
 
@@ -10,59 +11,65 @@ from predeldomain.provider.provider_cn import CN
 from predeldomain.provider.provider_top import TOP
 
 
-def write_log(data_list, suffix, type='text'):
+def write_log(provider, suffix, type='text'):
     """
     处理数据
     """
 
-    if len(data_list) == 0:
+    if len(provider.data) < 2:
         return
 
     today = datetime.now().date()
     file_log = f'{suffix}_{today}.log'
+    file_log_prev = f'{suffix}_{today}_prev.log'
     file_log_next = f'{suffix}_{today}_next.log'
 
-    # print(data_list)
+    data = provider.data_all()
+    data_early = provider.data_early()
+    data_today = provider.data_today()
 
     if type == 'text':
-        data_str = f'.{suffix}\n'.join(data_list[0]) + f'.{suffix}\n'
-        with open(file_log, 'w') as f:
-            f.write(data_str)
+        if len(data_early) > 0:
+            with open(file_log_prev, 'w') as f:
+                f.write(f'.{suffix}\n'.join(data_early) + f'.{suffix}\n')
+        if len(data_today) > 0:
+            with open(file_log, 'w') as f:
+                f.write(f'.{suffix}\n'.join(data_today) + f'.{suffix}\n')
 
-        for i in range(1, len(data_list)):
-            if i == 1:
+        for i in range(2, len(data)):
+            if i == 2:
                 wmode = 'w'
+                title = '明天过期'
             else:
                 wmode = 'a'
+                title = '明天以后过期'
 
-            data_str = f'.{suffix}\n'.join(data_list[i]) + f'.{suffix}\n'
+            data_str = f'.{suffix}\n'.join(data[i]) + f'.{suffix}\n'
             with open(file_log_next, wmode) as f:
-                f.write(f'===========================================\n{data_str}')
+                f.write(f'============={title}=====================\n{data_str}')
 
     elif type == 'json':
-        data_json = json.dumps(data_list[0], indent=4)
+        data_json = json.dumps(data, indent=4)
         with open(file_log, 'w') as f:
             f.write(data_json)
 
-        merged_list = sum(data_list[1:], [])
-        data_json = json.dumps(merged_list, indent=4)
-        with open(file_log_next, 'w') as f:
-            f.write(data_json)
 
-
-def notify(data_list, suffix):
+def notify(provider, suffix):
     """
     发送通知
     """
-    if len(data_list) == 0:
+    if len(provider.data) < 2:
         return
+
+    data_today = provider.data_today()
+    data_tomorrow = provider.data_tomorrow()
 
     content = ''
     content_markdown = ''
     content_text = ''
     # 今天数据
-    if len(data_list[0]) > 0:
-        content = '\n'.join(data_list[0])
+    if len(data_today) > 0:
+        content = '\n'.join(data_today)
         content_markdown = f'**域名 `{suffix}` 今天过期:**\n```bash\n{content}\n```'
         content_text = f'域名 {suffix} 今天过期:\n{content}\n'
 
@@ -70,8 +77,8 @@ def notify(data_list, suffix):
     content_next = ''
     content_next_markdown = ''
     content_next_text = ''
-    if len(data_list) > 1:
-        content_next = '\n'.join(data_list[1])
+    if len(data_tomorrow) > 1:
+        content_next = '\n'.join(data_tomorrow)
         content_next_markdown = (
             f'**域名 `{suffix}` 明天过期:**\n```bash\n{content_next}\n```'
         )
@@ -106,13 +113,22 @@ def entry(args):
 
     functions = {'top': TOP, 'cn': CN}
 
+    if args.suffix not in functions:
+        raise Exception(f'Unsupported suffix: {args.suffix}')
+
+    if args.whois == 'nic':
+        if args.suffix != 'top':
+            print('nic.top only', file=sys.stderr)
+            sys.exit(1)
+
     # print(
     #     f'Domain Suffix: {args.suffix}, Length: {args.length}, Mode: {args.mode}, Whois: {args.whois}'
     # )
-    provider = functions.get(args.suffix, Provider)(args.length, args.mode, args.whois)
+    provider = functions.get(args.suffix, Provider)(
+        args.length, args.mode, args.whois, args.delay, args.ouput
+    )
     provider.entry()
 
-    data_list = provider.data_all()
-    write_log(data_list, args.suffix, args.type)
+    write_log(provider, args.suffix, args.type)
 
-    notify(data_list, args.suffix)
+    notify(provider, args.suffix)
