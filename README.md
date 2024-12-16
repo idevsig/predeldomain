@@ -63,15 +63,16 @@ options:
 2. mode: 模式， 1. 数字 + 字母, 2. 数字, 3. 字母
 3. suffix: 域名后缀， 'cn' 或者 'top'
 4. type: 保存类型， 'text' 或者 'json' （数据保存和发送通知的格式）
-5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用官方接口(`.top`)、腾讯云(`.cn`)的 API 查询。
+5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用腾讯云(`.cn`)的 API 查询；`nic` 则使用官方注册局接口查询（当前仅支持 `top`）。
 6. version: 版本信息
-7. delay: 接口查询延时，单位秒，默认为 3
-8. ouput: 是否输出到控制台，默认为 False
+7. delay: 接口查询延时，单位秒，默认为 3。
+8. ouput: 是否输出到控制台，默认为 `False`。
 
-结果将会通过 PUSH 通知，和保存到本地文件。本地文件将会以 `后缀_日期.log` 的格式保存（`_next`则是明天及以后预删除的域名）。
+结果将会通过 PUSH 通知，和保存到本地文件。
+数据拆分为 `早期`、`今日`、`明日`、`后期`。`PUSH` 通知只发送今日和明日的数据。`log` text 日志方式则拆成三个文件 *早期*(`_prev.log`)、*今日*、明日及后期(`_next.log`)。json 日志方式则保存为 `_json.log`，以数组形式组合再转为 `JSON` 日志。
 
 ### 3. PUSH 通知
-当前仅支持 [**Lark**](https://www.larksuite.com/) 以及 [**PushDeer**](http://www.pushdeer.com/)。依赖 [**ipush 库**](https://github.com/idevsig/pypush)，可自行添加其它渠道。
+当前仅支持 [**Lark**](https://www.larksuite.com/) 以及 [**PushDeer**](http://www.pushdeer.com/)。依赖 [**ipush 库**](https://framagit.org/idev/pypush)，其它渠道可自行添加。
 
 需要设置环境变量
 ```bash

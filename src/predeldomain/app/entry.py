@@ -20,9 +20,11 @@ def write_log(provider, suffix, type='text'):
         return
 
     today = datetime.now().date()
-    file_log = f'{suffix}_{today}.log'
-    file_log_prev = f'{suffix}_{today}_prev.log'
-    file_log_next = f'{suffix}_{today}_next.log'
+    today_str = f'{suffix}_{today}'
+    file_log = f'{today_str}.log'
+    file_log_prev = f'{today_str}_prev.log'
+    file_log_next = f'{today_str}_next.log'
+    file_log_json = f'{today_str}_json.log'
 
     data = provider.data_all()
     data_early = provider.data_early()
@@ -50,7 +52,7 @@ def write_log(provider, suffix, type='text'):
 
     elif type == 'json':
         data_json = json.dumps(data, indent=4)
-        with open(file_log, 'w') as f:
+        with open(file_log_json, 'w') as f:
             f.write(data_json)
 
 
