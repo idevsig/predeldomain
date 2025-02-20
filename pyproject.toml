@@ -1,15 +1,13 @@
 [project]
 name = "predeldomain"
-version = "0.2.0"
+version = "0.2.1"
 description = "预删除域名查询"
 authors = [
-    { name = "Jetsung Chan", email = "jetsungchan@gmail.com" }
+    { name = "Jetsung Chan", email = "i@jetsung.com" }
 ]
 dependencies = [
     "ipush>=0.6.0",
     "whois>=1.20240129.2",
-    "pre-commit>=4.0.1",
-    "ruff>=0.8.3",
 ]
 readme = "README.md"
 keywords = ["domain"]
@@ -24,11 +22,12 @@ classifiers = [
     'Natural Language :: Chinese (Simplified)',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Programming Language :: Python :: 3 :: Only',
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     'Programming Language :: Python :: Implementation :: CPython',
     'Topic :: Communications :: Email',
     'Topic :: Software Development :: Libraries',
@@ -49,8 +48,8 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = [
-    "ruff>=0.1.9",
-    "pre-commit>=4.0.1",
+    "ruff>=0.9.6",
+    "pre-commit>=4.1.0",
     "pytest>=8.3.4",
 ]
 
