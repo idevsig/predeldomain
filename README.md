@@ -35,12 +35,11 @@ pip install predeldomain-X.X.X-py3-none-any.whl
 
 - 方式四：Docker
 
-## Image
-
-| Registry                                                                                          | Image                      |
-|---------------------------------------------------------------------------------------------------|----------------------------|
-| [Docker Hub](https://hub.docker.com/r/idevsig/predeldomain/)                                           | `idevsig/predeldomain`          |
-| [GitHub Container Registry](https://github.com/idevsig/predeldomain/pkgs/container/predeldomain) | `ghcr.io/idevsig/predeldomain` |
+| Registry                                                                                          | Image
+|---------------------------------------------------------------------------------------------------|----------------------------
+| [**Docker Hub**](https://hub.docker.com/r/idevsig/predeldomain)                                           | `idevsig/predeldomain`
+| [**GitHub Container Registry**](https://github.com/idevsig/predeldomain/pkgs/container/predeldomain)            | `ghcr.io/idevsig/predeldomain`
+| **Tencent Cloud Container Registry** | `ccr.ccs.tencentyun.com/idevsig/predeldomain`
 
 ### 2. 使用帮助
 
