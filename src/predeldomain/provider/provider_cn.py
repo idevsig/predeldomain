@@ -14,7 +14,7 @@ class CN(Provider):
         """
         下载 TXT 文件
         """
-        response = requests.get(url)
+        response = requests.get(self.proxy_url + url)
         if response.status_code == 200:
             return response.text
         else:

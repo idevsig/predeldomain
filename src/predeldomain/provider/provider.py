@@ -18,6 +18,7 @@ class Provider:
     data = []
 
     whois_tencent_url = 'https://dnspod.cloud.tencent.com/cgi/capi?action=DescribeWhoisInfoSpecial&csrfCode=&innerCapiMark=1'
+    proxy_url = ''
 
     def __init__(
         self,
@@ -32,6 +33,8 @@ class Provider:
         self.whois = whois
         self.delay = delay
         self.ouput = ouput
+
+        self.proxy_url = os.environ.get('PROXY', '')
 
     def entry(self):  # noqa: B027
         """

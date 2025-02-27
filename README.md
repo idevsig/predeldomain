@@ -33,7 +33,7 @@ pip install -e .
 pip install predeldomain-X.X.X-py3-none-any.whl
 ```
 
-- 方式四：Docker
+- 方式五：Docker
 
 | Registry                                                                                          | Image
 |---------------------------------------------------------------------------------------------------|----------------------------
@@ -76,8 +76,9 @@ options:
 7. delay: 接口查询延时，单位秒，默认为 3。
 8. ouput: 是否输出到控制台，默认为 `False`。
 
-结果将会通过 PUSH 通知，和保存到本地文件。
-数据拆分为 `早期`、`今日`、`明日`、`后期`。`PUSH` 通知只发送今日和明日的数据。`log` text 日志方式则拆成三个文件 *早期*(`_prev.log`)、*今日*、明日及后期(`_next.log`)。json 日志方式则保存为 `_json.log`，以数组形式组合再转为 `JSON` 日志。
+> 结果将会通过 PUSH 通知，和保存到本地文件。\
+> 数据拆分为 `早期`、`今日`、`明日`、`后期`。`PUSH` 通知只发送今日和明日的数据。`log` text 日志方式则拆成三个文件 *早期*(`_prev.log`)、*今日*、明日及后期(`_next.log`)。json 日志方式则保存为 `_json.log`，以数组形式组合再转为 `JSON` 日志。\
+> 可使用代理（解决 GitHub 获取域名列表缓慢的问题）。\
 
 ### 3. PUSH 通知
 当前仅支持 [**Lark**](https://www.larksuite.com/) 以及 [**PushDeer**](http://www.pushdeer.com/)。依赖 [**ipush 库**](https://framagit.org/idev/pypush)，其它渠道可自行添加。

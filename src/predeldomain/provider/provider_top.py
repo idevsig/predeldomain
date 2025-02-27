@@ -16,7 +16,7 @@ class TOP(Provider):
         """
         定义下载 CSV 文件的函数
         """
-        response = requests.get(self.file_url)
+        response = requests.get(self.proxy_url + self.file_url)
         if response.status_code == 200:
             return response.content
         else:
