@@ -111,6 +111,10 @@ class Provider:
         判断是否可注册
         """
 
+        # 未传入 whois 参数时，直接返回 True
+        if not self.whois:
+            return True
+
         if self.whois == 'nic':  # nic.top
             if '.top' in domain:
                 is_available = self.nic_top_available(domain)
@@ -127,7 +131,7 @@ class Provider:
         elif self.whois == 'whois':
             is_available = self.whois_available(domain)
         else:
-            return True
+            return False
 
         self.print_data(domain, is_available)
         return is_available

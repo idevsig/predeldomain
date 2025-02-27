@@ -64,7 +64,7 @@ options:
   -t {text,json}, --type {text,json}
                         Save type: 'text' or 'json'
   -w WHOIS, --whois WHOIS
-                        Whois: whois, isp, nic, none
+                        Whois: whois, isp, nic, <NULL>
   -v, --version         Print version
 ```
 1. length: 长度，不含后缀
