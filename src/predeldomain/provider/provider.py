@@ -16,13 +16,14 @@ Provider 提供者
 
 class Provider:
     data = []
+    proxy_url = ''
 
     whois_tencent_url = 'https://dnspod.cloud.tencent.com/cgi/capi?action=DescribeWhoisInfoSpecial&csrfCode=&innerCapiMark=1'
+    whois_zzzzy_url = 'https://www.zzidc.com/domain/checkDomain'
+
     whois_westxyz_url_f = (
         'https://www.west.xyz/web/whois/whoisinfo?domain={}&server=&refresh=0'
     )
-
-    proxy_url = ''
 
     def __init__(
         self,
@@ -133,16 +134,19 @@ class Provider:
         time.sleep(self.delay)
 
         is_available = False
-        if self.whois == 'isp':
-            is_available = self.isp_available(domain)
+        if self.whois == 'qcloud':
+            is_available = self.qcloud_available(domain)
         elif self.whois == 'whois':
             is_available = self.whois_available(domain)
         elif self.whois == 'westxyz':
             is_available = self.westxyz_available(domain)
+        elif self.whois == 'zzidc':
+            is_available = self.zzidc_available(domain)
         else:
             return False
 
         self.print_data(domain, is_available)
+        # exit()
         return is_available
 
     def nic_top_available(self, domain):
@@ -168,9 +172,9 @@ class Provider:
             print(f'Error: {domain}, {e}', file=sys.stderr)
             return False
 
-    def isp_available(self, domain):
+    def qcloud_available(self, domain):
         """
-        通过 ISP 判断是否可注册
+        通过腾讯云判断是否可注册
         """
 
         data = {
@@ -187,7 +191,7 @@ class Provider:
             'accept-language': 'en-US,en;q=0.9',
             'content-length': '149',
             'content-type': 'application/json; charset=UTF-8',
-            # 'cookie': '__root_domain_v=.tencent.com; _qddaz=QD.725133824044670; hy_user=a_98e5efef527597446e27dcffc370ae58; hy_token=R4Fso9Hx4m6w7zCdXsxx0cMFpR5yqUGgMw/q9ioxg1Vcrpd46wehlnDrLKYPWyfwn0yPhOrq1LckTgoLv0p7dA==; hy_source=web; qcloud_uid=oJv0qdK_ZSks; language=zh; qcstats_seo_keywords=%E5%93%81%E7%89%8C%E8%AF%8D-%E5%93%81%E7%89%8C%E8%AF%8D-%E7%99%BB%E5%BD%95; _ga=GA1.2.261890131.1733898849; _gcl_au=1.1.1975438295.1733898849; loginType=wx; sid=b8b508544870b6d77b724ffb9ccad6cc; trafficParams=***%24%3Btimestamp%3D1733987618427%3Bfrom_type%3Dserver%3Btrack%3Da49c89bc-d795-4377-a9ef-098cdcc67e3d%3B%24***; qcloud_visitId=22dcaec137f7d8ed64f5a131576e916e; _gat=1; qcmainCSRFToken=SkzN-My9N1g; intl=; qcloud_outsite_refer=https://whois.cloud.tencent.com;  qcloud_from=qcloud.inside.whois-1734107656341; dp.sess=b80f551d2e83e8aad0505b61e27b85a22e69538b29716c4a4a',
+            'cookie': '__root_domain_v=.tencent.com; _qddaz=QD.725133824044670; hy_user=a_98e5efef527597446e27dcffc370ae58; hy_token=R4Fso9Hx4m6w7zCdXsxx0cMFpR5yqUGgMw/q9ioxg1Vcrpd46wehlnDrLKYPWyfwn0yPhOrq1LckTgoLv0p7dA==; hy_source=web; qcloud_uid=oJv0qdK_ZSks; language=zh; qcstats_seo_keywords=%E5%93%81%E7%89%8C%E8%AF%8D-%E5%93%81%E7%89%8C%E8%AF%8D-%E7%99%BB%E5%BD%95; _ga=GA1.2.261890131.1733898849; _gcl_au=1.1.1975438295.1733898849; loginType=wx; sid=b8b508544870b6d77b724ffb9ccad6cc; trafficParams=***%24%3Btimestamp%3D1733987618427%3Bfrom_type%3Dserver%3Btrack%3Da49c89bc-d795-4377-a9ef-098cdcc67e3d%3B%24***; qcloud_visitId=22dcaec137f7d8ed64f5a131576e916e; _gat=1; qcmainCSRFToken=SkzN-My9N1g; intl=; qcloud_outsite_refer=https://whois.cloud.tencent.com;  qcloud_from=qcloud.inside.whois-1734107656341; dp.sess=b80f551d2e83e8aad0505b61e27b85a22e69538b29716c4a4a',
             'origin': 'https://whois.cloud.tencent.com',
             'priority': 'u=1, i',
             'referer': 'https://whois.cloud.tencent.com/',
@@ -251,6 +255,51 @@ class Provider:
                 return resp['regdate'] == ''
             else:
                 raise ValueError(f'resp code {resp["code"]}')
+
+        except Exception as e:
+            print(f'Error: find domain: {domain}, err:{e}')
+        return False
+
+    def zzidc_available(self, domain):
+        """
+        通过判断景安网络是否可注册
+        """
+
+        data = {
+            'domain': domain,
+        }
+
+        headers = {
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
+            'Content-Length': '14',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Cookie': 'JSESSIONID=12b8320f-056b-4857-ae8e-576a870136b1; __jsluid_s=4be4c292c75599d479a132ce8514b599; _pykey_=e2e80de0-0add-59c7-8b4b-0acd76ea36c6',
+            'Host': 'www.zzidc.com',
+            'Origin': 'https://www.zzidc.com',
+            'Sec-Ch-Ua': '"Chromium";v="131", "Not_A Brand";v="24"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"Linux"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+
+        response = requests.post(self.whois_zzzzy_url, data=data, headers=headers)
+
+        try:
+            if response.status_code != 200:
+                raise ValueError(f'status code {response.status_code}')
+
+            date_pattern = r'val:\s*(\d+)'
+
+            val_match = re.search(date_pattern, response.text)
+            if val_match:
+                return val_match.group(1) == '1'
 
         except Exception as e:
             print(f'Error: find domain: {domain}, err:{e}')

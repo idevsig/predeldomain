@@ -38,8 +38,7 @@ def parse_arguments():
     parser.add_argument(
         '-o',
         '--ouput',
-        type=bool,
-        default=False,
+        action='store_true',
         help='Output: print data to stdout',
     )
     parser.add_argument(
