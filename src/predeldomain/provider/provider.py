@@ -18,6 +18,10 @@ class Provider:
     data = []
 
     whois_tencent_url = 'https://dnspod.cloud.tencent.com/cgi/capi?action=DescribeWhoisInfoSpecial&csrfCode=&innerCapiMark=1'
+    whois_westxyz_url_f = (
+        'https://www.west.xyz/web/whois/whoisinfo?domain={}&server=&refresh=0'
+    )
+
     proxy_url = ''
 
     def __init__(
@@ -133,6 +137,8 @@ class Provider:
             is_available = self.isp_available(domain)
         elif self.whois == 'whois':
             is_available = self.whois_available(domain)
+        elif self.whois == 'westxyz':
+            is_available = self.westxyz_available(domain)
         else:
             return False
 
@@ -205,6 +211,46 @@ class Provider:
                 return True
             else:
                 return False
+
+        except Exception as e:
+            print(f'Error: find domain: {domain}, err:{e}')
+        return False
+
+    def westxyz_available(self, domain):
+        """
+        通过西部数码判断是否可注册
+        """
+
+        headers = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
+            'Cookie': 'ASPSESSIONIDQQATDBSB=LEPMIJEBGHJLEOPJCMBPNABI; sl-session=n+1cVW01xGfWRywhseix0A==; _ga=GA1.2.1826926937.1740825590; _gid=GA1.2.1831307472.1740825590; PHPSESSID=65v2fjoom432tqpjpaj68gifj6; SERVICEID=12|Z8LkH; ads_n_tongji_ftime=2025-3-1%2018%3A40%3A27; _ga_Q0EHN509HH=GS1.2.1740825593.1.1.1740825628.25.0.0',
+            'Host': 'www.west.xyz',
+            'Referer': 'https://www.west.xyz/en/domain/whois.asp',
+            'Sec-Ch-Ua': '"Chromium";v="131", "Not_A Brand";v="24"',
+            'Sec-Ch-Ua-Mobile': '?0',
+            'Sec-Ch-Ua-Platform': '"Linux"',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+
+        whois_westxyz_url = self.whois_westxyz_url_f.format(domain)
+        response = requests.get(whois_westxyz_url, headers=headers)
+
+        try:
+            if response.status_code != 200:
+                raise ValueError(f'status code {response.status_code}')
+
+            resp = response.json()
+            if 'code' in resp and (resp['code'] == 200 or resp['code'] == 100):
+                return resp['regdate'] == ''
+            else:
+                raise ValueError(f'resp code {resp["code"]}')
 
         except Exception as e:
             print(f'Error: find domain: {domain}, err:{e}')

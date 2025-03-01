@@ -64,14 +64,19 @@ options:
   -t {text,json}, --type {text,json}
                         Save type: 'text' or 'json'
   -w WHOIS, --whois WHOIS
-                        Whois: whois, isp, nic, <NULL>
+                        Whois: whois, isp, nic, westxyz <NULL>
   -v, --version         Print version
 ```
 1. length: 长度，不含后缀
 2. mode: 模式， 1. 数字 + 字母, 2. 数字, 3. 字母
 3. suffix: 域名后缀， 'cn' 或者 'top'
 4. type: 保存类型， 'text' 或者 'json' （数据保存和发送通知的格式）
-5. whois: whois, isp，查询可用的方式。`留空`，则不查询，而是直接根据官网提供的数据判断；`whois`，则使用 `whois` 库查询；`isp` 则使用腾讯云(`.cn`)的 API 查询；`nic` 则使用官方注册局接口查询（当前仅支持 `top`）。
+5. whois: whois, isp，查询可用的方式。
+   > `留空`，则不查询，而是直接根据官网提供的数据判断；\
+   > `whois`，则使用 `whois` 库查询；\
+   > `isp` 则使用腾讯云的 API 查询；\
+   > `westxyz` 则使用西部数码（`west.xyz`）的 API 查询；\
+   > `nic` 则使用官方注册局接口查询（当前仅支持 `top`）。
 6. version: 版本信息
 7. delay: 接口查询延时，单位秒，默认为 3。
 8. ouput: 是否输出到控制台，默认为 `False`。
