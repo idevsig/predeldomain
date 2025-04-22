@@ -10,50 +10,44 @@
 #   universal: false
 
 -e file:.
-certifi==2023.11.17
+certifi==2025.1.31
     # via requests
 cfgv==3.4.0
     # via pre-commit
-charset-normalizer==3.3.2
+charset-normalizer==3.4.1
     # via requests
-distlib==0.3.8
+distlib==0.3.9
     # via virtualenv
-exceptiongroup==1.2.2
-    # via pytest
-filelock==3.13.1
+filelock==3.18.0
     # via virtualenv
-identify==2.5.33
+identify==2.6.10
     # via pre-commit
-idna==3.6
+idna==3.10
     # via requests
-iniconfig==2.0.0
+iniconfig==2.1.0
     # via pytest
 ipush==0.6.0
     # via predeldomain
-lxml==4.9.4
+lxml==5.3.2
     # via ipush
-nodeenv==1.8.0
+nodeenv==1.9.1
     # via pre-commit
-packaging==23.2
+packaging==25.0
     # via pytest
-platformdirs==4.1.0
+platformdirs==4.3.7
     # via virtualenv
 pluggy==1.5.0
     # via pytest
-pre-commit==4.1.0
-pytest==8.3.4
-pyyaml==6.0.1
+pre-commit==4.2.0
+pytest==8.3.5
+pyyaml==6.0.2
     # via pre-commit
-requests==2.31.0
+requests==2.32.3
     # via ipush
-ruff==0.9.6
-setuptools==69.0.3
-    # via nodeenv
-tomli==2.2.1
-    # via pytest
-urllib3==2.1.0
+ruff==0.11.6
+urllib3==2.4.0
     # via requests
-virtualenv==20.25.0
+virtualenv==20.30.0
     # via pre-commit
 whois==1.20240129.2
     # via predeldomain

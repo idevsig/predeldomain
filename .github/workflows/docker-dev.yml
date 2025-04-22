@@ -1,0 +1,60 @@
+name: Docker-Dev
+
+on:
+  push:
+    branches:
+      - dev*
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/docker-dev.yml"
+      - "src/**"
+
+env:
+  GHCR_SLUG: ghcr.io/${{ github.repository }}
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+            tag: dev-amd64
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+            tag: dev-arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.GHCR_SLUG }}
+          labels: |
+            org.opencontainers.image.title=PreDelDomain
+            org.opencontainers.image.description=Pre-delete domain query.
+            org.opencontainers.image.vendor=Jetsung Chan
+          tags: ${{ matrix.tag }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build (without push)
+        uses: docker/bake-action@v6
+        with:
+          files: |
+            ./docker-bake.hcl
+            cwd://${{ steps.meta.outputs.bake-file }}
+          targets: ${{ matrix.tag }}
+          push: ${{ github.event_name != 'pull_request' }}

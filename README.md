@@ -33,13 +33,16 @@ pip install -e .
 pip install predeldomain-X.X.X-py3-none-any.whl
 ```
 
-- 方式五：Docker
+- 方式五：**Docker**
 
-| Registry                                                                                          | Image
+> **版本：** `latest`, `main`, <`TAG`>
+
+| Registry                                                                                        | Image
 |---------------------------------------------------------------------------------------------------|----------------------------
 | [**Docker Hub**](https://hub.docker.com/r/idevsig/predeldomain)                                           | `idevsig/predeldomain`
 | [**GitHub Container Registry**](https://github.com/idevsig/predeldomain/pkgs/container/predeldomain)            | `ghcr.io/idevsig/predeldomain`
 | **Tencent Cloud Container Registry** | `ccr.ccs.tencentyun.com/idevsig/predeldomain`
+| **Aliyun Container Registry** | `registry.cn-guangzhou.aliyuncs.com/idevsig/predeldomain`
 
 ### 2. 使用帮助
 
@@ -135,6 +138,12 @@ python -m pytest
 
 # 打印测试报告
 python -m pytest -s
+```
+
+### Docker Buildx Bake
+```bash
+docker buildx bake --print
+docker buildx bake --print dev
 ```
 
 ## 仓库镜像
